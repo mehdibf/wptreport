@@ -161,13 +161,13 @@
     }
   }
 
-  function showIfCondition(row, numberOfBrowsers, condition, showMessages) {
+  function showIfCondition(row, numberOfElement, condition, showMessages) {
     $('.table tr').each(function() {
       var shouldShow = false;
       if (condition == "equal") {
-        shouldShow = ($(this).find("td." + row).length) == numberOfBrowsers;
+        shouldShow = ($(this).find("td." + row).length) == numberOfElement;
       } else if (condition == "grater") {
-        shouldShow = ($(this).find("td." + row).length) >= numberOfBrowsers;
+        shouldShow = ($(this).find("td." + row).length) >= numberOfElement;
       }
       if (shouldShow) {
         $(this).show();
