@@ -90,16 +90,16 @@ var fs = require("fs-extra")
 ,   copyFiles = "analysis.css jquery.min.js sticky-headers.js filter-table.js bootstrap.min.css".split(" ")
 ,   filter = {}
 ,   showdown = require("showdown")
-,   messages = function (data) {
+,   messages = function (data, subtestNummer) {
         var res = "";
         for (var i = 0, n = out.ua.length; i < n; i++) {
             if (data.hasOwnProperty(out.ua[i])) {
               var message = options.markdown ? markdown.makeHtml(data[out.ua[i]]) : esc(data[out.ua[i]]) ;
-              res += "<tr class='message'><td class='ua'>"+out.ua[i]+":</td><td> "+message+"</td></tr>\n";
+              res += "<tr class='message " + subtestNummer + "'><td class='ua'>"+out.ua[i]+":</td><td> "+message+"</td></tr>\n";
             }
         }
         if (res !== "") {
-            res = "<tr class='messages'><td colspan='" + (n+1) + "'><table>"+res+"</table></td></tr>\n";
+            res = "<tr class='messages " + subtestNummer + "'><td colspan='" + (n+1) + "'><table>"+res+"</table></td></tr>\n";
         }
         return res;
     }
@@ -471,7 +471,7 @@ testList.forEach(createResult);
 
 var startTable = "<thead><tr class='persist-header'><th>Test <span class='message_toggle'>Show/Hide Messages</span></th><th>" + out.ua.join("</th><th>") + "</th></tr></thead>\n"
 ,   startToc = "<h3>Test Files</h3>\n<ol class='toc'>"
-,   script = options.failures ? "window.setTimeout(function() { \n $('.message_toggle').show();\n $('.messages').toggle(); \n $('.message_toggle').on('click', function() {\n$('.messages').toggle();\n});\n}, 1000);" : ""
+,   script = options.failures ? "window.setTimeout(function() { \n $('.message_toggle').show();\n $('.messages').toggle();\n}, 1000);" : ""
 ,   description = (options.description !== "") ? rfs(jn(options.input, options.description)) : ""
 ;
 
@@ -498,7 +498,7 @@ var createAllTable = function (tableName) {
             table += "<tr id='subtest-" + test.testNum + "-" + st.stNum +"' class='subtest'><td>" + name + "</td>" + cells(st.byUA) + "</tr>\n";
             if (st.hasOwnProperty("UAmessage") && options.failures) {
                  // include rows with messages
-                 table += messages(st.UAmessage) ;
+                 table += messages(st.UAmessage, "subtest-"+ test.testNum + "-" + st.stNum) ;
             }
         }
     }
@@ -541,7 +541,7 @@ var createLessThanTwoTable = function () {
             table += "<tr id='subtest-" +test.testNum+"-"+st.stNum+"' class='subtest'><td>" + name + "</td>" + cells(st.byUA) + "</tr>\n";
             if (st.hasOwnProperty("UAmessage") && options.failures) {
                  // include rows with messages
-                 table += messages(st.UAmessage) ;
+                 table += messages(st.UAmessage, "subtest-"+ test.testNum + "-" + st.stNum) ;
             }
         }
     }
@@ -586,7 +586,7 @@ var createCompleteFailTable = function () {
             table += "<tr id='subtest-" + test.testNum+"-"+st.stNum+"' class='subtest'><td>" + name + "</td>" + cells(st.byUA) + "</tr>\n";
             if (st.hasOwnProperty("UAmessage") && options.failures) {
                  // include rows with messages
-                 table += messages(st.UAmessage) ;
+                 table += messages(st.UAmessage, "subtest-"+ test.testNum + "-" + st.stNum) ;
             }
         }
     }
